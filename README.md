@@ -1,4 +1,8 @@
-# cli-table
+# cli-table 
+[![CircleCI](https://circleci.com/gh/geckoboard/cli-table.svg?style=shield)](https://circleci.com/gh/geckoboard/cli-table)
+[![Coverage Status](https://coveralls.io/repos/github/geckoboard/cli-table/badge.svg?branch=master)](https://coveralls.io/github/geckoboard/cli-table?branch=master)
+[![GoDoc](https://godoc.org/github.com/geckoboard/cli-table?status.svg)](https://godoc.org/github.com/geckoboard/cli-table)
+
 Fancy ASCII tables for your CLI with full ANSI support.
 
 The cli-table package provides a simple API for rendering ASCII tables.
