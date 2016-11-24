@@ -7,6 +7,7 @@ import (
 	"io"
 	"regexp"
 	"strings"
+	"unicode/utf8"
 )
 
 // Alignment represents the supported cell content alignment modes.
@@ -196,7 +197,7 @@ func (t *Table) align(val string, align Alignment, maxWidth int, stripAnsiChars 
 
 	if stripAnsiChars {
 		val = ansiEscapeRegex.ReplaceAllString(val, "")
-		vLen = len(val)
+		vLen = utf8.RuneCountInString(val)
 	} else {
 		vLen = measure(val)
 	}
@@ -216,7 +217,7 @@ func (t *Table) align(val string, align Alignment, maxWidth int, stripAnsiChars 
 func (t *Table) colWidths() []int {
 	colWidths := make([]int, len(t.headers))
 	for colIndex, h := range t.headers {
-		maxWidth := len(h)
+		maxWidth := utf8.RuneCountInString(h)
 		for _, row := range t.rows {
 			cellWidth := measure(row[colIndex])
 			if cellWidth > maxWidth {
@@ -251,7 +252,7 @@ func (t *Table) groupWidths(colWidths []int) (groupWidths []int, adjustedColWidt
 
 		// Calculate group width based on padding and group title. If its
 		// greater than the calculated groupWidth, append the extra space to the last group col
-		contentWidth := 2*t.padding + len(group.header)
+		contentWidth := 2*t.padding + utf8.RuneCountInString(group.header)
 		if contentWidth > groupWidth {
 			adjustedColWidths[groupStartCol+group.colSpan-1] += contentWidth - groupWidth
 			groupWidth = contentWidth
@@ -265,5 +266,5 @@ func (t *Table) groupWidths(colWidths []int) (groupWidths []int, adjustedColWidt
 
 // Measure string length excluding any Ansi color escape codes.
 func measure(val string) int {
-	return len(ansiEscapeRegex.ReplaceAllString(val, ""))
+	return utf8.RuneCountInString(ansiEscapeRegex.ReplaceAllString(val, ""))
 }

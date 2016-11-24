@@ -206,6 +206,38 @@ func TestHeaderGroups(t *testing.T) {
 	}
 }
 
+func TestUTF8Handling(t *testing.T) {
+	expOutput := `+-------+-------+
+| 1     | 2     |
++-------+-------+
+| ▲ 123 | 123 ▾ |
+| > 123 | 123 < |
++-------+-------+
+`
+
+	var buf bytes.Buffer
+	table := New(2)
+	table.SetHeader(0, "1", AlignLeft)
+	table.SetHeader(1, "2", AlignLeft)
+	table.SetPadding(1)
+	table.Append(
+		[]string{"▲ 123", "123 ▾"},
+		[]string{"> 123", "123 <"},
+	)
+
+	buf.Reset()
+	table.Write(&buf, PreserveAnsi)
+	tableOutput := buf.String()
+
+	if tableOutput != expOutput {
+		t.Errorf(
+			"expected output to be: \n%s\n got:\n%s\n",
+			indent(expOutput, 2),
+			indent(tableOutput, 2),
+		)
+	}
+}
+
 func indent(s string, pad int) string {
 	return regexp.MustCompile("(?m)^").ReplaceAllString(s, strings.Repeat(" ", pad))
 }
