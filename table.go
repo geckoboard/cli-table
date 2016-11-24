@@ -7,6 +7,7 @@ import (
 	"io"
 	"regexp"
 	"strings"
+	"unicode/utf8"
 )
 
 // Alignment represents the supported cell content alignment modes.
@@ -265,5 +266,5 @@ func (t *Table) groupWidths(colWidths []int) (groupWidths []int, adjustedColWidt
 
 // Measure string length excluding any Ansi color escape codes.
 func measure(val string) int {
-	return len(ansiEscapeRegex.ReplaceAllString(val, ""))
+	return utf8.RuneCountInString(ansiEscapeRegex.ReplaceAllString(val, ""))
 }
